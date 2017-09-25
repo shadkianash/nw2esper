@@ -66,7 +66,10 @@ try:
     site = unicode(site.read(), errors='replace')
     events = json.loads(site)
     for event in events:  # cada evento dentro de los eventos
-        if 'bla bla' not in event['string'].lower():
+        try:
+            event['string']
+        except KeyError:
+
             for MetaData in event['results']['fields']:
                 if myCurrentGroup != MetaData['group']:
                     myCurrentGroup = MetaData['group']
