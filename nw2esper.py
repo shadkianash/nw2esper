@@ -30,6 +30,13 @@ else:
     sys.stderr.write('service url must be: http(s)://ip:port\n')
     sys.exit(1)
 
+if args.output != None:
+    args.output
+    WriteToFile = 1
+    file = open (args.output, "w+")
+else:
+    WriteToFile = 0
+
 sys.stderr.write('protocol:' + PROTOCOL + '\nservice: ' + SERVER + '\nport: ' + PORT + '\n')
 url_password = urllib2.HTTPPasswordMgrWithDefaultRealm()
 sys.stderr.write('username: ' + args.username + '\n')
@@ -78,7 +85,10 @@ try:
                     else:
                         myEvent = myEvent[:len(myEvent) - 2]
                         myEvent = myEvent + '}'
-                        sys.stderr.write(myEvent + '\n')
+                        if WriteToFile == 1:
+                            file.write(myEvent + '\n')
+                        else:
+                            sys.stderr.write(myEvent + '\n')
                     eventsCount = eventsCount + 1
                     myEvent = 'Event={'
                 if MetaData['type'] == "time":
@@ -103,7 +113,10 @@ try:
 
     myEvent = myEvent[:len(myEvent) - 2]
     myEvent = myEvent + '}'
-    sys.stderr.write(myEvent + '\n')
+    if WriteToFile == 1:
+        file.write(myEvent + '\n')
+    else:
+        sys.stderr.write(myEvent + '\n')
     for tempschema, tempvalue in mySchemaList.iteritems():
 
         mySchema = mySchema + tempschema
@@ -125,8 +138,10 @@ try:
         mySchema = mySchema + ' ' + typevar + ', '
 
     mySchema = mySchema[:len(mySchema) - 2] + ');'
-
-    sys.stderr.write('\n' + mySchema + '\n')
+    if WriteToFile == 1:
+        file.write('\n' + mySchema + '\n')
+    else:
+        sys.stderr.write('\n' + mySchema + '\n')
 
     sys.stderr.write('Events Count: ' + str(eventsCount) + ' \n')
 
