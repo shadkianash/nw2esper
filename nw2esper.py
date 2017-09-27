@@ -17,7 +17,7 @@ parser.add_argument('-q', '--query', dest='query',help='query used to retrieve t
 parser.add_argument('-u', '--user', dest='username', help='the username to use in the REST API', default='admin')
 parser.add_argument('-p', '--password', dest='password', help='the password of the username to use in the REST API',default='netwitness')
 parser.add_argument('-o', '--output', dest='output',help='the output file. if is not specified, the output will be the stderr')
-parser.add_argument('-O', '--obfuscate', dest='obfuscate',help='a coma separated list of the metakeys to obfuscate')
+parser.add_argument('-O', '--obfuscate', dest='obfuscate',help='a space separated list of the metakeys to obfuscate')
 parser.add_argument('-k', '--key', dest='key',help='the key used to (de)obfuscate data')
 parser.add_argument('-DO', '--deobfuscate', dest='deobfuscate',help='just deobfuscate using the key')
 
@@ -66,12 +66,13 @@ if args.output != None:
 else:
     WriteToFile = 0
 
+sys.stderr.write('nw2esper\n\n')
 
 
-sys.stderr.write('protocol:' + PROTOCOL + '\nservice: ' + SERVER + '\nport: ' + PORT + '\n')
+sys.stderr.write('protocol:' + PROTOCOL + ' service: ' + SERVER + ' port: ' + PORT + ' ')
 url_password = urllib2.HTTPPasswordMgrWithDefaultRealm()
 sys.stderr.write('username: ' + args.username + '\n')
-sys.stderr.write('password:' + args.password + '\n')
+
 url_password.add_password(None, PROTOCOL + "://" + SERVER + ':' + PORT, args.username, args.password)
 handler = urllib2.HTTPBasicAuthHandler(url_password)
 opener = urllib2.build_opener(handler)
@@ -90,9 +91,9 @@ else:
     myquery = 'select * where ' + args.query
 
 myquery = urllib2.quote(myquery)
-sys.stderr.write('encoded query: ' + myquery + '\n')
+# sys.stderr.write('encoded query: ' + myquery + '\n')
 urlquery = PROTOCOL + "://" + SERVER + ':' + PORT + '/sdk?msg=query&query=' + myquery + '&force-content-type=application/json'
-sys.stderr.write('try url:' + urlquery + '\n')
+sys.stderr.write('\ntry url:' + urlquery + '\n')
 LastTime = 0
 mySchemaList = {}
 mySchema = 'CREATE SCHEMA Event('
